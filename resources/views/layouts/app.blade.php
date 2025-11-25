@@ -47,7 +47,7 @@
                         <a class="nav-link" href="{{ route('about') }}">Tentang Kami</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('program') }}">Program</a>
+                        <a class="nav-link" href="{{ route('program.index') }}">Program</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('ourteam') }}">Tim Kami</a>

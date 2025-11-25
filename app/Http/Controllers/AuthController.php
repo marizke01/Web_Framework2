@@ -41,7 +41,7 @@ class AuthController extends Controller
         // LOGIN USER
         Auth::login($user);
 
-        return redirect()->route('dashboard')->with('success', 'Registrasi berhasil!');
+        return redirect()->route('home')->with('success', 'Registrasi berhasil!');
     }
 
     
@@ -63,7 +63,7 @@ class AuthController extends Controller
 
         // CHECK CREDENTIALS
         if (Auth::attempt($request->only('email', 'password'))) {
-            return redirect()->route('dashboard');
+            return redirect()->route('home')->with('success', 'Login berhasil!');
         }
 
         // FAIL LOGIN
@@ -72,17 +72,10 @@ class AuthController extends Controller
         ])->withInput();
     }
 
-   
-    // DASHBOARD PAGE
-    public function dashboard()
-    {
-        return view('dashboard');
-    }
-
     // LOGOUT
     public function logout()
     {
         Auth::logout();
-        return redirect()->route('login.form');
+        return redirect()->route('home')->with('success', 'Logout berhasil!');
     }
 }
