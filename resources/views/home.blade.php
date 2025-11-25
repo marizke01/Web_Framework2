@@ -106,41 +106,4 @@
     </div>
 </section>
 
-<!-- Auth Section Minimalis -->
-@guest
-<section class="py-4 bg-primary text-white">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <h6 class="mb-0">Ingin pengalaman belanja yang lebih baik?</h6>
-            </div>
-            <div class="col-md-4 text-end">
-                <a href="{{ route('login.form') }}" class="btn btn-light btn-sm me-2">Login</a>
-                <a href="{{ route('register.form') }}" class="btn btn-outline-light btn-sm">Daftar</a>
-            </div>
-        </div>
-    </div>
-</section>
-@endguest
-
-@auth
-<section class="py-3 bg-success text-white">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <h6 class="mb-0">Selamat datang, {{ auth()->user()->name }}! 🎉</h6>
-            </div>
-            <div class="col-md-4 text-end">
-                <a href="{{ route('logout') }}" class="btn btn-outline-light btn-sm" 
-                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    Logout
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                    @csrf
-                </form>
-            </div>
-        </div>
-    </div>
-</section>
-@endauth
 @endsection
