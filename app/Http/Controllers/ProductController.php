@@ -4,66 +4,63 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+
 class ProductController extends Controller
 {
-   
-    // Fungsi untuk menampilkan daftar semua produk (Katalog)
     public function index()
     {
-        // 1. Menggunakan Eloquent ORM: Mengambil semua data dari tabel 'products'
-        //    (kecuali yang sudah di-soft delete)
-        $products = Product::all(); 
+        $products = Product::all();
 
-        // 2. Mengirim data ($products) ke View 'program'
-        //    'compact('products')' sama dengan ['products' => $products]
+        // Jika route yang dipanggil adalah route admin
+        if (request()->routeIs('products.index')) {
+            return view('products.index', compact('products'));
+        }
+
+        // Jika route yang dipanggil adalah route program (publik)
         return view('program', compact('products'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
-        //
+        return view('products.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required',
+            'price' => 'required|numeric'
+        ]);
+
+        Product::create($request->all());
+        return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit($id)
     {
-        //
+        $product = Product::findOrFail($id);
+        return view('products.edit', compact('product'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required',
+            'price' => 'required|numeric'
+        ]);
+
+        $product = Product::findOrFail($id);
+        $product->update($request->all());
+
+        return redirect()->route('products.index')->with('success', 'Produk berhasil diperbarui!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        Product::findOrFail($id)->delete();
+        return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus!');
     }
 }

@@ -10,7 +10,6 @@ use Illuminate\Support\Collection;
 
 class AuthController extends Controller
 {
-    
     // SHOW REGISTER FORM
     public function showRegisterForm()
     {
@@ -24,11 +23,16 @@ class AuthController extends Controller
         $request->validate([
             'name'     => 'required|min:3',
             'email'    => 'required|email|unique:users,email',
-            'password' => 'required|min:6'
+            'password' => 'required|min:6',
+            // Kalau kamu mau user bisa pilih role:
+            'role'     => 'in:user,admin'
         ]);
 
         // PROCESS USING COLLECTION
         $data = collect($request->only('name', 'email', 'password'));
+
+        // Tambahkan role, kalau kosong → default user
+        $data->put('role', $request->role ?? 'user');
 
         // HASH PASSWORD
         $data = $data->map(function ($item, $key) {
@@ -44,14 +48,12 @@ class AuthController extends Controller
         return redirect()->route('home')->with('success', 'Registrasi berhasil!');
     }
 
-    
     // SHOW LOGIN FORM
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
-   
     // LOGIN PROCESS
     public function login(Request $request)
     {

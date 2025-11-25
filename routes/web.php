@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ProductController; // JANGAN LUPA INI!
+use App\Http\Controllers\ProductController;
 
 // 1. HOME
 Route::get('/', function () {
@@ -17,6 +17,8 @@ Route::get('/about', function () {
 // 3. PROGRAM 
 Route::get('/program', [ProductController::class, 'index'])->name('program.index');
 Route::get('/program/{id}', [ProductController::class, 'show'])->name('program.show');
+//products
+Route::resource('products', ProductController::class);
 
 // 4. OUR TEAM
 Route::get('/team', function () {

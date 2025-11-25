@@ -72,6 +72,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('contactus') }}">Kontak</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('products.index') }}">Kelola Produk</a>
+                    </li>
                 </ul>
 
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
