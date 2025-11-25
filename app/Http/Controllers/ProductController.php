@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    // LIST SEMUA PRODUK
     public function index()
     {
         $products = Product::all();
@@ -21,46 +22,68 @@ class ProductController extends Controller
     }
 
 
+    // FORM TAMBAH PRODUK
     public function create()
     {
         return view('products.create');
     }
 
+    // SIMPAN PRODUK
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'description' => 'required',
-            'price' => 'required|numeric'
+            'name' => 'required|min:3',
+            'price' => 'required|numeric',
+            'description' => 'nullable|max:500'
         ]);
 
-        Product::create($request->all());
-        return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan!');
+        Product::create([
+            'name' => $request->name,
+            'price' => $request->price,
+            'description' => $request->description
+        ]);
+
+        return redirect()->route('products.index')->with('success', 'Product created successfully!');
     }
 
+    // DETAIL PRODUK
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+        return view('products.show', compact('product'));
+    }
+
+    // FORM EDIT PRODUK
     public function edit($id)
     {
         $product = Product::findOrFail($id);
         return view('products.edit', compact('product'));
     }
 
+    // UPDATE PRODUK
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required',
-            'description' => 'required',
-            'price' => 'required|numeric'
+            'name' => 'required|min:3',
+            'price' => 'required|numeric',
+            'description' => 'nullable|max:500'
         ]);
 
         $product = Product::findOrFail($id);
-        $product->update($request->all());
 
-        return redirect()->route('products.index')->with('success', 'Produk berhasil diperbarui!');
+        $product->update([
+            'name' => $request->name,
+            'price' => $request->price,
+            'description' => $request->description
+        ]);
+
+        return redirect()->route('products.index')->with('success', 'Product updated successfully!');
     }
 
+    // HAPUS PRODUK
     public function destroy($id)
     {
         Product::findOrFail($id)->delete();
-        return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus!');
+        return redirect()->route('products.index')->with('success', 'Product deleted successfully!');
     }
 }

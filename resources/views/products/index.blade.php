@@ -1,58 +1,45 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mt-4">
+<div class="container">
+    <h2>Product List</h2>
 
-    <h1 class="mb-4">Daftar Produk</h1>
+    <a href="{{ route('products.create') }}" class="btn btn-primary mb-3">Add New Product</a>
 
-    <a href="{{ route('products.create') }}" class="btn btn-primary mb-3">
-        Tambah Produk
-    </a>
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
 
-    <div class="card shadow-sm">
-        <div class="card-body p-0">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th width="200px">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($products as $p)
+            <tr>
+                <td>{{ $p->name }}</td>
+                <td>${{ number_format($p->price, 2) }}</td>
+                <td>
+                    <a href="{{ route('products.show', $p->id) }}" class="btn btn-info btn-sm">View</a>
+                    <a href="{{ route('products.edit', $p->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                    
+                    <form action="{{ route('products.destroy', $p->id) }}" 
+                          method="POST"
+                          style="display:inline-block"
+                          onsubmit="return confirm('Yakin ingin menghapus?')">
+                        @csrf
+                        @method('DELETE') 
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                    </form>
 
-            <table class="table table-striped mb-0">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Nama</th>
-                        <th>Kategori</th>
-                        <th>Harga</th>
-                        <th width="180">Aksi</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @foreach ($products as $p)
-                    <tr>
-                        <td>{{ $p->name }}</td>
-                        <td>{{ $p->category }}</td>
-                        <td>Rp {{ number_format($p->price, 0, ',', '.') }}</td>
-                        <td>
-                            <a href="{{ route('products.edit', $p->id) }}" 
-                               class="btn btn-warning btn-sm">
-                                Edit
-                            </a>
-
-                            <form action="{{ route('products.destroy', $p->id) }}" 
-                                  method="POST" 
-                                  style="display:inline-block;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" 
-                                        class="btn btn-danger btn-sm"
-                                        onclick="return confirm('Yakin hapus?')">
-                                    Hapus
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-
-            </table>
-        </div>
-    </div>
-
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 </div>
 @endsection
