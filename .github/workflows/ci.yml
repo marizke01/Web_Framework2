@@ -1,0 +1,65 @@
+name: Simple CI Test
+
+on: 
+  push:
+    branches: [feature/update-title]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # 1. Checkout code
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    # 2. Tampilkan debug info
+    - name: Debug Information
+      run: |
+        echo "🎯 CI Workflow Started"
+        echo "Branch: ${{ github.ref }}"
+        echo "Event: ${{ github.event_name }}"
+        echo "Work directory:"
+        pwd
+        ls -la
+    
+    # 3. Cek PHP syntax (jika file ada)
+    - name: Check PHP Syntax
+      run: |
+        if [ -f "index.php" ]; then
+          echo "📄 Checking index.php..."
+          php -l index.php
+          echo "✅ PHP syntax OK"
+        else
+          echo "❌ index.php not found!"
+          ls -la *.php
+          exit 1
+        fi
+    
+    # 4. Verify content
+    - name: Verify File Content
+      run: |
+        echo "🔍 Checking file content..."
+        echo "Current content of index.php:"
+        cat index.php
+        echo ""
+        
+        EXPECTED='<?php echo "Welcome to Our Simple CI Project"; ?>'
+        ACTUAL=$(cat index.php | tr -d '\r')
+        
+        if [ "$ACTUAL" = "$EXPECTED" ]; then
+          echo "✅ Content matches expected!"
+        else
+          echo "❌ Content mismatch!"
+          echo "Expected: $EXPECTED"
+          echo "Got: $ACTUAL"
+          exit 1
+        fi
+    
+    # 5. Success message
+    - name: CI Success
+      run: |
+        echo "🎉 CI Pipeline Completed Successfully!"
+        echo "All checks passed ✅"
